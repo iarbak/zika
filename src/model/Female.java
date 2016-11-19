@@ -36,6 +36,20 @@ public class Female extends Mosquito{
 	}
 	
 	/**
+	 * returns child type
+	 * @return
+	 */
+	public int childType()	{
+		switch(child){
+		case R:
+			return 1;
+		case W:
+			return 0;
+		}
+		return -1;
+	}
+	
+	/**
 	 * determines offspring type depending on mate m
 	 * @param m
 	 */
@@ -56,4 +70,28 @@ public class Female extends Mosquito{
 		}
 	}
 	
+	/**
+	 * returns value of fertile
+	 */
+	public boolean isFertile(){
+		return fertile;
+	}
+	
+	/**
+	 * Will the mosquito produce a child today?
+	 * 0 if no.
+	 * 1 if male
+	 * 2 if female
+	 * @return
+	 */
+	public int produceChild(){
+		if(fertile){
+			if (age==35){
+				return 2;
+			}
+			else if (age==15 || age==25 || age==45 || age==55)
+				return 1;
+		}
+		return 0;
+	}
 }

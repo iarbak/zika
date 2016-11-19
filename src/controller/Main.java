@@ -28,18 +28,56 @@ public class Main {
 
 	public static void main(String[] args) {
 		init();
-		ArrayList<Female> mateable=new ArrayList<>();
+		//females that ought to mate
+		ArrayList<Female> mateablef=new ArrayList();
+		//males that ought to mate
+		ArrayList<Male> mateablem=new ArrayList();
 		for (Female F:f)	{
 			if(F.isAdult())
-				mateable.add(F);
+				mateablef.add(F);
 		}
-		mate(mateable,m);
-		mateable.clear();
+		mate(mateablef,m);
+		mateablef.clear();
 		while(month<totMonths)	{
 			//30 days to the month
 			for(int day=0; day<30; day++)	{
-				
+				//first all the mosquito spawning
+				for(Female F: f){
+					switch(F.produceChild()){
+					case 0: break;
+					case 1: m.add(new Male(F.childType(), 0));
+						break;
+					case 2: f.add(new Female(F.childType(), 0));
+					}					
+				}
+				//now all our mosquitoes age, we weed out the dead
+				for (Female F:f)	{
+					F.update();
+					if(!F.alive)
+						f.remove(F);
+				}
+				for(Male M:m)	{
+					M.update();
+					if(!M.alive)
+						m.remove(M);
+				}
+				//mating again
+				for(Female F:f)	{
+					if(F.canMate())
+						mateablef.add(F);
+				}
+				for (Male M:m)	{
+					if(M.canMate())
+						mateablem.add(M);
+				}
+				mate(mateablef, mateablem);
+				mateablef.clear();
+				mateablem.clear();
+				//end of day
+				day++;
 			}
+			month++;
+			wulbach(month);
 		}
 	}
 
