@@ -28,7 +28,19 @@ public class Main {
 
 	public static void main(String[] args) {
 		init();
-
+		ArrayList<Female> mateable=new ArrayList<>();
+		for (Female F:f)	{
+			if(F.isAdult())
+				mateable.add(F);
+		}
+		mate(mateable,m);
+		mateable.clear();
+		while(month<totMonths)	{
+			//30 days to the month
+			for(int day=0; day<30; day++)	{
+				
+			}
+		}
 	}
 
 	/**
@@ -41,7 +53,6 @@ public class Main {
 			//generate random index of male to mate with
 			int random= (int) (Math.random()*(m.size()-1));
 			F.mate(m.get(random));
-
 		}
 	}
 
@@ -69,6 +80,7 @@ public class Main {
 	/**
 	 * input wulbachians you are releasing
 	 * i is month number
+	 * assume all adults are newly hatched
 	 * @param i 
 	 */
 	static void wulbach(int j){
@@ -79,9 +91,9 @@ public class Main {
 		mw=sc.nextInt();
 		sc.close();
 		for(int i=0; i<fw; i++){
-			f.add(new Female(0, 0));
+			f.add(new Female(0, 15));
 		}
 		for(int i=0; i<mw; i++)
-			m.add(new Male(0,0));
+			m.add(new Male(0,15));
 	}
 }

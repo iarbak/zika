@@ -25,6 +25,13 @@ public abstract class Mosquito {
 	}
 	
 	/**
+	 * id this mosquito an adult
+	 */
+	public boolean isAdult()	{
+		return adult && alive;
+	}
+	
+	/**
 	 * constructor that intiialises for a specific age
 	 * @param t=mosquito type: 0 for wolbachian, 1 for regular
 	 * @param age =age in days
