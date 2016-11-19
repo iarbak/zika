@@ -1,6 +1,8 @@
 package model;
+
 /**
  * This class models the generic mosquito and must be extended
+ * 
  * @author aditi
  *
  */
@@ -8,79 +10,87 @@ public abstract class Mosquito {
 
 	int age;
 	int lifeSpan;
-	enum type{W, R};	//wolbachian and regular
-	public boolean alive;	//is the mosquito alive?
-	public boolean adult;	//is it capable of reproduction?
-	type T;	//store type of mosquito
+
+	enum type {
+		W, R
+	}; // wolbachian and regular
+
+	public boolean alive; // is the mosquito alive?
+	public boolean adult; // is it capable of reproduction?
+	type T; // store type of mosquito
+
 	/**
-	 * Constructor
-	 * t is 0 if wolbachian, 1 if not
+	 * Constructor t is 0 if wolbachian, 1 if not
 	 */
-	Mosquito(int t)	{
-		age=0;
-		alive=true;
-		adult=false;
+	Mosquito(int t) {
+		age = 0;
+		alive = true;
+		adult = false;
 		genLifespan();
 		setType(t);
 	}
-	
+
 	/**
 	 * id this mosquito an adult
 	 */
-	public boolean isAdult()	{
+	public boolean isAdult() {
 		return adult && alive;
 	}
-	
+
 	/**
 	 * returns type in integer
+	 * 
 	 * @return
 	 */
-	public int getType()	{
+	public int getType() {
 		return T.ordinal();
 	}
-	
+
 	/**
 	 * constructor that intiialises for a specific age
-	 * @param t=mosquito type: 0 for wolbachian, 1 for regular
-	 * @param age =age in days
+	 * 
+	 * @param t=mosquito
+	 *            type: 0 for wolbachian, 1 for regular
+	 * @param age
+	 *            =age in days
 	 */
-	Mosquito(int t, int age)	{
+	Mosquito(int t, int age) {
 		this(t);
-		this.age=age;
+		this.age = age;
 	}
-	
+
 	/**
-	 * sets whether Wolbachian or not. 0 is Wolbachian
-	 * 1 is regular.
+	 * sets whether Wolbachian or not. 0 is Wolbachian 1 is regular.
+	 * 
 	 * @param t
 	 */
-	void setType(int t)	{
-		switch(t)	{
+	void setType(int t) {
+		switch (t) {
 		case 0:
-			T=type.W;
+			T = type.W;
 			break;
 		case 1:
-			T=type.R;
+			T = type.R;
 		}
 	}
-	
+
 	/**
-	 * Generates lifespan based on
-	 * mosquito gender
-	 * and assigns it to variable lifespan
+	 * Generates lifespan based on mosquito gender and assigns it to variable
+	 * lifespan
 	 */
-	void genLifespan() {};
-	
+	void genLifespan() {
+	};
+
 	/**
 	 * changes variables with progress of a day
 	 */
-	public void update()	{
+	public void update() {
 		age++;
-		if(age>=15)
-			adult=true;
-		if(age>lifeSpan)	{
-			alive=false;
-			adult=false;
+		if (age >= 15)
+			adult = true;
+		if (age > lifeSpan) {
+			alive = false;
+			adult = false;
 		}
 	}
 }
