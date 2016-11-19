@@ -44,6 +44,8 @@ public class Main {
 		mateablef.clear();
 		mateablem.clear();
 		while (month < totMonths) {
+			if(month!=0)
+				wulbach(month);
 			// 30 days to the month
 			for (int day = 0; day < 30; day++) {
 				// first all the mosquito spawning
@@ -91,7 +93,6 @@ public class Main {
 				}
 			}
 			month++;
-			wulbach(month);
 		}
 	}
 
