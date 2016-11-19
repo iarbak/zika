@@ -40,13 +40,7 @@ public class Female extends Mosquito{
 	 * @return
 	 */
 	public int childType()	{
-		switch(child){
-		case R:
-			return 1;
-		case W:
-			return 0;
-		}
-		return -1;
+		return child.ordinal();
 	}
 	
 	/**

@@ -17,7 +17,8 @@ import model.Male;
  * 	This has been assumed to keep population stable
  */
 public class Main {
-
+	static Scanner sc=new Scanner(System.in);
+	
 	static ArrayList<Female> f=new ArrayList();
 	static ArrayList<Male> m=new ArrayList();
 	static int day=0;	//day number in simulation
@@ -36,8 +37,13 @@ public class Main {
 			if(F.isAdult())
 				mateablef.add(F);
 		}
-		mate(mateablef,m);
+		for (Male M:m)	{
+			if(M.canMate())
+				mateablem.add(M);
+		}
+		mate(mateablef,mateablem);
 		mateablef.clear();
+		mateablem.clear();
 		while(month<totMonths)	{
 			//30 days to the month
 			for(int day=0; day<30; day++)	{
@@ -46,7 +52,7 @@ public class Main {
 					switch(F.produceChild()){
 					case 0: break;
 					case 1: m.add(new Male(F.childType(), 0));
-						break;
+					break;
 					case 2: f.add(new Female(F.childType(), 0));
 					}					
 				}
@@ -74,7 +80,10 @@ public class Main {
 				mateablef.clear();
 				mateablem.clear();
 				//end of day
-				day++;
+
+				if(day%5==0){
+					print(f,m);
+				}
 			}
 			month++;
 			wulbach(month);
@@ -98,12 +107,10 @@ public class Main {
 	 * Accepts initial conditions from users
 	 */
 	static void init()	{
-		Scanner sc=new Scanner(System.in);
 		System.out.println("Enter orignal regular female population:");
 		fr=sc.nextInt();
 		System.out.println("Enter original regular male population:");
 		mr=sc.nextInt();
-		sc.close();
 		wulbach(0);
 		System.out.println("Enter number of months the simulation should run:");
 		totMonths=sc.nextInt();
@@ -122,16 +129,38 @@ public class Main {
 	 * @param i 
 	 */
 	static void wulbach(int j){
-		Scanner sc=new Scanner(System.in);
 		System.out.println("Enter wulbachian female population released in month "+j+":");
 		fw=sc.nextInt();
 		System.out.println("Enter wulbachian male population released in month "+j+":");
 		mw=sc.nextInt();
-		sc.close();
 		for(int i=0; i<fw; i++){
 			f.add(new Female(0, 15));
 		}
 		for(int i=0; i<mw; i++)
 			m.add(new Male(0,15));
+	}
+
+	/**
+	 * prints population statistics
+	 * @param f	array of females
+	 * @param m array of males
+	 */
+	static void print(ArrayList<Female> f, ArrayList<Male> m)	{
+		int count=0;
+		for(Female F: f)	{
+			if (F.getType()==0)	
+				count++;
+		}
+		System.out.println("Number of female Wulbachians: "+count);
+		System.out.println("Number of female Regular: "+ (f.size()-count));
+		count=0;
+		for(Male M: m)	{
+			if (M.getType()==0)	
+				count++;
+		}
+		System.out.println("Number of male Wulbachians: "+count);
+		System.out.println("Number of male Regular: "+ (m.size()-count));
+		
+		System.out.println();
 	}
 }

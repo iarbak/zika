@@ -32,6 +32,14 @@ public abstract class Mosquito {
 	}
 	
 	/**
+	 * returns type in integer
+	 * @return
+	 */
+	public int getType()	{
+		return T.ordinal();
+	}
+	
+	/**
 	 * constructor that intiialises for a specific age
 	 * @param t=mosquito type: 0 for wolbachian, 1 for regular
 	 * @param age =age in days
