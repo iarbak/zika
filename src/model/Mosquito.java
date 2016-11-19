@@ -25,6 +25,16 @@ public abstract class Mosquito {
 	}
 	
 	/**
+	 * constructor that intiialises for a specific age
+	 * @param t=mosquito type: 0 for wolbachian, 1 for regular
+	 * @param age =age in days
+	 */
+	Mosquito(int t, int age)	{
+		this(t);
+		this.age=age;
+	}
+	
+	/**
 	 * sets whether Wolbachian or not. 0 is Wolbachian
 	 * 1 is regular.
 	 * @param t

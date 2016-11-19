@@ -12,8 +12,11 @@ public class Male extends Mosquito{
 	 * t= 0 for Wolbachian, 1 for regular
 	 * @param t
 	 */
-	Male(int t)	{
+	public Male(int t)	{
 		super(t);
+	}
+	public Male(int t, int age)	{
+		super(t, age);
 	}
 	
 	@Override
