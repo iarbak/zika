@@ -10,6 +10,7 @@ public abstract class Mosquito {
 	int lifeSpan;
 	enum type{W, R};	//wolbachian and regular
 	boolean alive;	//is the mosquito alive?
+	boolean adult;	//is it capable of reproduction?
 	type T;	//store type of mosquito
 	/**
 	 * Constructor
@@ -18,6 +19,7 @@ public abstract class Mosquito {
 	Mosquito(int t)	{
 		age=0;
 		alive=true;
+		adult=false;
 		genLifespan();
 		setType(t);
 	}
@@ -43,4 +45,17 @@ public abstract class Mosquito {
 	 * and assigns it to variable lifespan
 	 */
 	void genLifespan() {};
+	
+	/**
+	 * changes variables with progress of a day
+	 */
+	void update()	{
+		age++;
+		if(age>=15)
+			adult=true;
+		if(age>lifeSpan)	{
+			alive=false;
+			adult=false;
+		}
+	}
 }

@@ -18,6 +18,6 @@ public class Male extends Mosquito{
 	
 	@Override
 	void genLifespan()	{
-		lifeSpan=10;	//10 days
+		lifeSpan=25;	//10 days as adult, 15 as egg/larva
 	}
 }
