@@ -30,8 +30,11 @@ public class Human {
 	 */
 	public void bitten(Mosquito m){
 		if(m.infected && !infected)	{
-			infected=true;
-			daySince=0;
+			double random = (Math.random());	//transmission chance is half
+			if (random < 0.5)	{
+				infected=true;
+				daySince=0;
+			}
 		}
 	}
 

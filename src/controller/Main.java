@@ -11,24 +11,23 @@ import model.Male;
 /**
  * runs the actual simulation
  * 
- * @author aditi 
- * some assumptions: 1. female mosquito only mates once 2. female
- * mosquito produces one female mosquito at 20th day of adult phase and
- * 4 males at 0, 10, 30 and 40th day. This has been assumed to keep
- * population stable
+ * @author aditi some assumptions: 1. female mosquito only mates once 2. female
+ *         mosquito produces one female mosquito at 20th day of adult phase and
+ *         4 males at 0, 10, 30 and 40th day. This has been assumed to keep
+ *         population stable
  */
 public class Main {
 	static Scanner sc = new Scanner(System.in);
 
 	static ArrayList<Female> f = new ArrayList();
 	static ArrayList<Male> m = new ArrayList();
-	static ArrayList<Human> h=new ArrayList();
+	static ArrayList<Human> h = new ArrayList();
 	static int day = 0; // day number in simulation
 	// population of mosquitos:
 	static int fr, mr, fw, mw;
 	static int totMonths;
 	static int month = 0;
-	static int pop;	//population: number of humans
+	static int pop; // population: number of humans
 
 	public static void main(String[] args) {
 		init();
@@ -37,18 +36,18 @@ public class Main {
 		// males that ought to mate
 		ArrayList<Male> mateablem = new ArrayList();
 		for (Female F : f) {
-			if (F.isAdult())
+			if (F.age == 15)
 				mateablef.add(F);
 		}
 		for (Male M : m) {
-			if (M.isAdult())
+			if (M.age == 15 && M.alive)
 				mateablem.add(M);
 		}
 		mate(mateablef, mateablem);
 		mateablef.clear();
 		mateablem.clear();
 		while (month < totMonths) {
-			if(month!=0)
+			if (month != 0)
 				wulbach(month);
 			// 30 days to the month
 			for (int day = 0; day < 30; day++) {
@@ -67,11 +66,11 @@ public class Main {
 				}
 				// mating again
 				for (Female F : f) {
-					if (F.age==15)
+					if (F.age == 15)
 						mateablef.add(F);
 				}
 				for (Male M : m) {
-					if (M.age>15)
+					if (M.age > 15)
 						mateablem.add(M);
 				}
 				mate(mateablef, mateablem);
@@ -91,13 +90,13 @@ public class Main {
 					if (!M.alive)
 						m.remove(M);
 				}
-				//humans progressing on the path to recovery
-				for(Human H: h)	{
+				// humans progressing on the path to recovery
+				for (Human H : h) {
 					H.update();
 				}
-				//mosquitoes bite
+				// mosquitoes bite
 				bite(f, h);
-				
+
 				// end of day
 
 				if (day % 5 == 0) {
@@ -113,34 +112,34 @@ public class Main {
 	 * we assume in this simulation that a female only mates once
 	 */
 	static void mate(List<Female> f, List<Male> m) {
-		if(m.size()>0){
+		if (m.size() > 0) {
 			for (Female F : f) {
 				// generate random index of male to mate with
-				int random = (int) (Math.random() * (m.size() - 1));
+				int random = (int) (Math.random() * m.size());
 				F.mate(m.get(random));
 			}
 		}
 	}
 
 	/**
-	 * Accepts initial conditions from users,
-	 * initialises mosquito population with random ages
+	 * Accepts initial conditions from users, initialises mosquito population
+	 * with random ages
 	 */
 	static void init() {
-		//initialising human population
+		// initialising human population
 		System.out.println("Enter number of humans:");
-		pop=sc.nextInt();
-		int preg= (int)((double)pop*22)/600;
-		int infec= (int)((double)pop*0.07);
+		pop = sc.nextInt();
+		int preg = (int) ((double) pop * 22) / 600;
+		int infec = (int) ((double) pop * 0.07);
 		for (int i = 0; i < pop; i++) {
-			boolean infected=i%infec==0;
-			if(i% preg==0)
+			boolean infected = i % infec == 0;
+			if (i % preg == 0)
 				h.add(new Human(infected, true));
 			else
 				h.add(new Human(infected));
 		}
 
-		//initialising previously present mosquito population
+		// initialising previously present mosquito population
 		System.out.println("Enter orignal regular female population:");
 		fr = sc.nextInt();
 		System.out.println("Enter original regular male population:");
@@ -149,7 +148,7 @@ public class Main {
 		System.out.println("Enter number of months the simulation should run:");
 		totMonths = sc.nextInt();
 		for (int i = 0; i < fr; i++) {
-			if(i%50==0 && i%100!=0)	//1% population infected
+			if (i % 50 == 0 && i % 100 != 0) // 1% population infected
 				f.add(new Female(1, (int) (i / ((double) (40 / fr))) + 15, true));
 			else
 				f.add(new Female(1, (int) (i / ((double) (40 / fr))) + 15));
@@ -161,29 +160,36 @@ public class Main {
 
 	/**
 	 * Handles biting event
-	 * @param h human who is bitten
-	 * @param f mosquito that bites the human
+	 * 
+	 * @param h
+	 *            human who is bitten
+	 * @param f
+	 *            mosquito that bites the human
 	 */
-	static void handleBite(Human h, Female f)	{
+	static void handleBite(Human h, Female f) {
 		h.bitten(f);
 		f.bite(h);
 	}
-	
+
 	/**
 	 * Mosquitoes in f bite humans in h
+	 * 
 	 * @param f
 	 * @param m
 	 */
 	static void bite(List<Female> f, List<Human> h) {
-		if(h.size()>0){
+		if (h.size() > 0) {
 			for (Female F : f) {
-				// generate random index of male to mate with
-				int random = (int) (Math.random() * (h.size() - 1));
-				handleBite(h.get(random), F);
+				double r = Math.random(); // bite rate is 0.15
+				if (r < 0.15) {
+					// generate random index of human to bite
+					int random = (int) (Math.random() * h.size());
+					handleBite(h.get(random), F);
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * input wulbachians you are releasing i is month number assume all adults
 	 * are newly hatched
@@ -225,18 +231,18 @@ public class Main {
 		}
 		System.out.println("Number of male Wulbachians: " + count);
 		System.out.println("Number of male Regular: " + (m.size() - count));
-		
-		count=0;
-		int p=0;
-		for(Human H: h){
-			if(H.infected){
+
+		count = 0;
+		int p = 0;
+		for (Human H : h) {
+			if (H.infected) {
 				count++;
-				if(H.pregnant)
+				if (H.pregnant)
 					p++;
 			}
 		}
-		System.out.println("Number of humans infected: "+count);
-		System.out.println("Number of them that are pregnant: "+p);
+		System.out.println("Number of humans infected: " + count);
+		System.out.println("Number of them that are pregnant: " + p);
 		System.out.println();
 	}
 }
