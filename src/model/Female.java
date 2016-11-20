@@ -23,13 +23,6 @@ public class Female extends Mosquito {
 		super(t, age);
 	}
 
-	/**
-	 * Ought this female mate?
-	 */
-	public boolean canMate() {
-		return (age == 15);
-	}
-
 	@Override
 	void genLifespan() {
 		lifeSpan = 55; // 40 days adult
@@ -50,6 +43,8 @@ public class Female extends Mosquito {
 	 * @param m
 	 */
 	public void mate(Male m) {
+		System.out.println("mating");
+		
 		if (this.T == type.R) {
 			if (m.T == type.R) {
 				fertile = true;

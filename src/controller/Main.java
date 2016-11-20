@@ -10,10 +10,11 @@ import model.Male;
 /**
  * runs the actual simulation
  * 
- * @author aditi some assumptions: 1. female mosquito only mates once 2. female
- *         mosquito produces one female mosquito at 20th day of adult phase and
- *         4 males at 0, 10, 30 and 40th day. This has been assumed to keep
- *         population stable
+ * @author aditi 
+ * some assumptions: 1. female mosquito only mates once 2. female
+ * mosquito produces one female mosquito at 20th day of adult phase and
+ * 4 males at 0, 10, 30 and 40th day. This has been assumed to keep
+ * population stable
  */
 public class Main {
 	static Scanner sc = new Scanner(System.in);
@@ -37,7 +38,7 @@ public class Main {
 				mateablef.add(F);
 		}
 		for (Male M : m) {
-			if (M.canMate())
+			if (M.isAdult())
 				mateablem.add(M);
 		}
 		mate(mateablef, mateablem);
@@ -49,7 +50,8 @@ public class Main {
 			// 30 days to the month
 			for (int day = 0; day < 30; day++) {
 				// first all the mosquito spawning
-				for (Female F : f) {
+				ArrayList<Female> Clone = new ArrayList(f);
+				for (Female F : Clone) {
 					switch (F.produceChild()) {
 					case 0:
 						break;
@@ -60,10 +62,22 @@ public class Main {
 						f.add(new Female(F.childType(), 0));
 					}
 				}
+				// mating again
+				for (Female F : f) {
+					if (F.age==15)
+						mateablef.add(F);
+				}
+				for (Male M : m) {
+					if (M.age>15)
+						mateablem.add(M);
+				}
+				mate(mateablef, mateablem);
+				mateablef.clear();
+				mateablem.clear();
 				// now all our mosquitoes age, we weed out the dead
 				ArrayList<Female> fClone = new ArrayList(f);
 				ArrayList<Male> mClone = new ArrayList(m);
-				
+
 				for (Female F : fClone) {
 					F.update();
 					if (!F.alive)
@@ -74,18 +88,6 @@ public class Main {
 					if (!M.alive)
 						m.remove(M);
 				}
-				// mating again
-				for (Female F : f) {
-					if (F.canMate())
-						mateablef.add(F);
-				}
-				for (Male M : m) {
-					if (M.canMate())
-						mateablem.add(M);
-				}
-				mate(mateablef, mateablem);
-				mateablef.clear();
-				mateablem.clear();
 				// end of day
 
 				if (day % 5 == 0) {
@@ -101,15 +103,18 @@ public class Main {
 	 * we assume in this simulation that a female only mates once
 	 */
 	static void mate(List<Female> f, List<Male> m) {
-		for (Female F : f) {
-			// generate random index of male to mate with
-			int random = (int) (Math.random() * (m.size() - 1));
-			F.mate(m.get(random));
+		if(m.size()>0){
+			for (Female F : f) {
+				// generate random index of male to mate with
+				int random = (int) (Math.random() * (m.size() - 1));
+				F.mate(m.get(random));
+			}
 		}
 	}
 
 	/**
-	 * Accepts initial conditions from users
+	 * Accepts initial conditions from users,
+	 * initialises mosquito population with random ages
 	 */
 	static void init() {
 		System.out.println("Enter orignal regular female population:");

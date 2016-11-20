@@ -8,7 +8,7 @@ package model;
  */
 public abstract class Mosquito {
 
-	int age;
+	public int age;
 	int lifeSpan;
 
 	enum type {
