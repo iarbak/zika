@@ -24,10 +24,38 @@ public class Female extends Mosquito {
 	}
 
 	/**
-	 * Ought this female mate?
+	 * method to construct possibly zika infected mosquito
+	 * @param t
+	 * @param infected
 	 */
-	public boolean canMate() {
-		return (age == 15);
+	public Female(int t, boolean infected)	{
+		this(t);
+		if(t==1)	{
+			this.infected=infected;
+		}
+	}
+
+	/**
+	 * method to construct possibly infected female
+	 * @param t	is the type of mosquito
+	 * @param age is age of the mosquito
+	 * @param infected is whether the mosquito received the virus
+	 */
+	public Female(int t, int age, boolean infected)	{
+		this(t, age);
+		if(t==1)	{
+			this.infected=infected;
+		}
+	}
+	
+	/**
+	 * How does biting a human affect the mosquito
+	 * @param h
+	 */
+	public void bite(Human h)	{
+		if(h.infected)
+			if(T==type.W)
+				infected=true;
 	}
 
 	@Override

@@ -8,8 +8,10 @@ package model;
  */
 public abstract class Mosquito {
 
-	int age;
+	public int age;
 	int lifeSpan;
+	boolean infected;
+	//does this mosquito carry Zika?
 
 	enum type {
 		W, R
@@ -27,6 +29,7 @@ public abstract class Mosquito {
 		alive = true;
 		adult = false;
 		genLifespan();
+		infected=false;
 		setType(t);
 	}
 
