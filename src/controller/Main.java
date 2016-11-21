@@ -1,7 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import model.Female;
@@ -18,8 +21,8 @@ import model.Male;
 public class Main {
 	static Scanner sc = new Scanner(System.in);
 
-	static ArrayList<Female> f = new ArrayList();
-	static ArrayList<Male> m = new ArrayList();
+	static HashMap<Female , Object> f = new HashMap();
+	static HashMap<Male, Object> m = new HashMap();
 	static int day = 0; // day number in simulation
 	// population of mosquitos:
 	static int fr, mr, fw, mw;
@@ -29,16 +32,16 @@ public class Main {
 	public static void main(String[] args) {
 		init();
 		// females that ought to mate
-		ArrayList<Female> mateablef = new ArrayList();
+		HashMap<Female, Object> mateablef = new HashMap();
 		// males that ought to mate
-		ArrayList<Male> mateablem = new ArrayList();
-		for (Female F : f) {
+		HashMap<Male, Object> mateablem = new HashMap();
+		for (Female F : f.keySet()) {
 			if (F.isAdult())
-				mateablef.add(F);
+				mateablef.put(F, null);
 		}
-		for (Male M : m) {
+		for (Male M : m.keySet()) {
 			if (M.canMate())
-				mateablem.add(M);
+				mateablem.put(M, null);
 		}
 		mate(mateablef, mateablem);
 		mateablef.clear();
@@ -47,39 +50,39 @@ public class Main {
 			// 30 days to the month
 			for (int day = 0; day < 30; day++) {
 				// first all the mosquito spawning
-				for (Female F : f) {
+				for (Female F : f.keySet()) {
 					switch (F.produceChild()) {
 					case 0:
 						break;
 					case 1:
-						m.add(new Male(F.childType(), 0));
+						m.put(new Male(F.childType(), 0), null);
 						break;
 					case 2:
-						f.add(new Female(F.childType(), 0));
+						f.put(new Female(F.childType(), 0), null);
 					}
 				}
 				// now all our mosquitoes age, we weed out the dead
-				ArrayList<Female> fClone = new ArrayList(f);
-				ArrayList<Male> mClone = new ArrayList(m);
+				HashMap<Female, Object> fClone = new HashMap(f);
+				HashMap<Male, Object> mClone = new HashMap(m);
 				
-				for (Female F : fClone) {
+				for (Female F : fClone.keySet()) {
 					F.update();
 					if (!F.alive)
 						f.remove(F);
 				}
-				for (Male M : mClone) {
+				for (Male M : mClone.keySet()) {
 					M.update();
 					if (!M.alive)
 						m.remove(M);
 				}
 				// mating again
-				for (Female F : f) {
+				for (Female F : f.keySet()) {
 					if (F.canMate())
-						mateablef.add(F);
+						mateablef.put(F, null);
 				}
-				for (Male M : m) {
+				for (Male M : m.keySet()) {
 					if (M.canMate())
-						mateablem.add(M);
+						mateablem.put(M, null);
 				}
 				mate(mateablef, mateablem);
 				mateablef.clear();
@@ -99,11 +102,13 @@ public class Main {
 	 * Simulates mating of input female list with current adult males randomly
 	 * we assume in this simulation that a female only mates once
 	 */
-	static void mate(List<Female> f, List<Male> m) {
-		for (Female F : f) {
+	static void mate(HashMap<Female, Object> mateableF , HashMap<Male, Object> mateablem) {
+		for (Female F : mateableF.keySet()) {
 			// generate random index of male to mate with
-			int random = (int) (Math.random() * (m.size() - 1));
-			F.mate(m.get(random));
+			Random r = new Random(mateablem.size());
+			int index = r.nextInt(mateablem.size());
+			List<Male> keys = new ArrayList<Male>(mateablem.keySet());
+			F.mate(keys.get(index));
 		}
 	}
 
@@ -119,10 +124,10 @@ public class Main {
 		System.out.println("Enter number of months the simulation should run:");
 		totMonths = sc.nextInt();
 		for (int i = 0; i < fr; i++) {
-			f.add(new Female(1, (int) (i / ((double) (40 / fr))) + 15));
+			f.put(new Female(1, (int) (i / ((double) (40 / fr))) + 15), null);
 		}
 		for (int i = 0; i < mr; i++) {
-			m.add(new Male(1, (int) (i / ((double) (10 / mr))) + 15));
+			m.put(new Male(1, (int) (i / ((double) (10 / mr))) + 15), null);
 		}
 	}
 
@@ -138,10 +143,10 @@ public class Main {
 		System.out.println("Enter wulbachian male population released in month " + j + ":");
 		mw = sc.nextInt();
 		for (int i = 0; i < fw; i++) {
-			f.add(new Female(0, 15));
+			f.put(new Female(0, 15), null);
 		}
 		for (int i = 0; i < mw; i++)
-			m.add(new Male(0, 15));
+			m.put(new Male(0, 15), null);
 	}
 
 	/**
@@ -152,16 +157,16 @@ public class Main {
 	 * @param m
 	 *            array of males
 	 */
-	static void print(ArrayList<Female> f, ArrayList<Male> m) {
+	static void print(HashMap<Female, Object> f, HashMap<Male, Object> m) {
 		int count = 0;
-		for (Female F : f) {
+		for (Female F : f.keySet()) {
 			if (F.getType() == 0)
 				count++;
 		}
 		System.out.println("Number of female Wulbachians: " + count);
 		System.out.println("Number of female Regular: " + (f.size() - count));
 		count = 0;
-		for (Male M : m) {
+		for (Male M : m.keySet()) {
 			if (M.getType() == 0)
 				count++;
 		}
