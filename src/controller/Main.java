@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import model.Female;
@@ -14,10 +15,11 @@ import model.Male;
 /**
  * runs the actual simulation
  * 
- * @author aditi some assumptions: 1. female mosquito only mates once 2. female
- *         mosquito produces one female mosquito at 20th day of adult phase and
+ * @author aditi 
+ * some assumptions: 1. female mosquito only mates once (based on actual mosquito behaviour
+ * 2. female mosquito produces one female mosquito at 20th day of adult phase and
  *         4 males at 0, 10, 30 and 40th day. This has been assumed to keep
- *         population stable
+ *         population stable and gender ratio well distributed as 1:1
  */
 public class Main {
 	static Scanner sc = new Scanner(System.in);
@@ -44,7 +46,7 @@ public class Main {
 				mateablef.add(F);
 		}
 		for (Male M : m) {
-			if (M.age == 15 && M.alive)
+			if (M.age >= 15 && M.alive)
 				mateablem.add(M);
 		}
 		mate(mateablef, mateablem);
@@ -74,7 +76,7 @@ public class Main {
 						mateablef.add(F);
 				}
 				for (Male M : m) {
-					if (M.age > 15)
+					if (M.age >= 15)
 						mateablem.add(M);
 				}
 				mate(mateablef, mateablem);
@@ -151,14 +153,15 @@ public class Main {
 		wulbach(0);
 		System.out.println("Enter number of months the simulation should run:");
 		totMonths = sc.nextInt();
+		Random r=new Random(); 
 		for (int i = 0; i < fr; i++) {
 			if (i % 50 == 0 && i % 100 != 0) // 1% population infected
-				f.add(new Female(1, (int) (i / ((double) (40 / fr))) + 15, true));
+				f.add(new Female(1, r.nextInt(40)+15, true));
 			else
-				f.add(new Female(1, (int) (i / ((double) (40 / fr))) + 15));
+				f.add(new Female(1, r.nextInt(40)+15 + 15));
 		}
 		for (int i = 0; i < mr; i++) {
-			m.add(new Male(1, (int) (i / ((double) (10 / mr))) + 15));
+			m.add(new Male(1, r.nextInt(10)+15 + 15));
 		}
 	}
 
@@ -199,15 +202,15 @@ public class Main {
 	}
 
 	/**
-	 * input wulbachians you are releasing i is month number assume all adults
+	 * input wolbachians you are releasing i is month number assume all adults
 	 * are newly hatched
 	 * 
 	 * @param i
 	 */
 	static void wulbach(int j) {
-		System.out.println("Enter wulbachian female population released in month " + j + ":");
+		System.out.println("Enter wolbachian female population released in month " + j + ":");
 		fw = sc.nextInt();
-		System.out.println("Enter wulbachian male population released in month " + j + ":");
+		System.out.println("Enter wolbachian male population released in month " + j + ":");
 		mw = sc.nextInt();
 		for (int i = 0; i < fw; i++) {
 			f.add(new Female(0, 15));
