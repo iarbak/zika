@@ -26,9 +26,9 @@ import model.Male;
 public class Main {
 	static Scanner sc = new Scanner(System.in);
 
-	static ConcurrentHashMap<Female, Integer> f = new ConcurrentHashMap(100000);
+	static ConcurrentHashMap<Female, Integer> f = new ConcurrentHashMap(10000000);
 
-	static ConcurrentHashMap<Male, Integer> m = new ConcurrentHashMap(100000);
+	static ConcurrentHashMap<Male, Integer> m = new ConcurrentHashMap(10000000);
 	static Field table = null;
 	
 	static{
@@ -233,15 +233,16 @@ public class Main {
 	 * @param i
 	 */
 	static void wulbach(int j) {
-		System.out.println("Enter wolbachian female population released in month " + j + ":");
-		fw = sc.nextInt();
-		System.out.println("Enter wolbachian male population released in month " + j + ":");
-		mw = sc.nextInt();
-		for (int i = 0; i < fw; i++) {
+//		System.out.println("Enter wolbachian female population released in month " + j + ":");
+//		fw = sc.nextInt();
+//		System.out.println("Enter wolbachian male population released in month " + j + ":");
+//		mw = sc.nextInt();
+//		for (int i = 0; i < fw; i++) {
+		for(int i = 0; i < 25500; i++)
 			f.put(new Female(0, 15), 0);
-		}
-		for (int i = 0; i < mw; i++)
-			m.put(new Male(0, 15), 0);
+//		
+//		for (int i = 0; i < mw; i++)
+//			m.put(new Male(0, 15), 0);
 	}
 
 	/**
