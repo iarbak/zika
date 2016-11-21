@@ -129,7 +129,7 @@ public class Main {
 		// initialising human population
 		System.out.println("Enter number of humans:");
 		pop = sc.nextInt();
-		int preg = (int) ((double) pop * 22) / 600;
+		int preg = (int) ((double) pop * 0.367);
 		int infec = (int) ((double) pop * 0.07);
 		for (int i = 0; i < pop; i++) {
 			boolean infected = i % infec == 0;
