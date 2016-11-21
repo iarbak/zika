@@ -31,6 +31,7 @@ public class Main {
 	static int totMonths;
 	static int month = 0;
 	static int pop; // population: number of humans
+	static int totpreg=0;	//total pregnant women
 
 	public static void main(String[] args) {
 		init();
@@ -108,6 +109,7 @@ public class Main {
 			}
 			month++;
 		}
+		System.out.println("Total number of pregnant women afftected: "+totpreg);
 	}
 
 	/**
@@ -169,8 +171,12 @@ public class Main {
 	 *            mosquito that bites the human
 	 */
 	static void handleBite(Human h, Female f) {
-		h.bitten(f);
 		f.bite(h);
+		if(!h.infected)	{
+			h.bitten(f);
+			if(h.infected && h.pregnant)
+				totpreg++;
+		}
 	}
 
 	/**
