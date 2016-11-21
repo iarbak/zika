@@ -1,9 +1,8 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -24,9 +23,9 @@ import model.Male;
 public class Main {
 	static Scanner sc = new Scanner(System.in);
 
-	static ArrayList<Female> f = new ArrayList();
-	static ArrayList<Male> m = new ArrayList();
-	static ArrayList<Human> h = new ArrayList();
+	static HashMap<Female , Object> f = new HashMap();
+	static HashMap<Male, Object> m = new HashMap();
+	static HashMap<Human, Object> h = new HashMap();
 	static int day = 0; // day number in simulation
 	// population of mosquitos:
 	static int fr, mr, fw, mw;
@@ -35,69 +34,82 @@ public class Main {
 	static int pop; // population: number of humans
 	static int totpreg=0;	//total pregnant women
 
+	static Random r = new Random();
+	
 	public static void main(String[] args) {
 		init();
 		// females that ought to mate
-		ArrayList<Female> mateablef = new ArrayList();
+		HashMap<Female, Object> mateablef = new HashMap();
 		// males that ought to mate
-		ArrayList<Male> mateablem = new ArrayList();
-		for (Female F : f) {
+		HashMap<Male, Object> mateablem = new HashMap();
+		for (Female F : f.keySet()) {
 			if (F.age == 15)
-				mateablef.add(F);
+				mateablef.put(F, null);
 		}
-		for (Male M : m) {
-			if (M.age >= 15 && M.alive)
-				mateablem.add(M);
+		for (Male M : m.keySet()) {
+			if (M.age == 15 && M.alive)
+				mateablem.put(M, null);
 		}
 		mate(mateablef, mateablem);
 		mateablef.clear();
 		mateablem.clear();
+		
 		while (month < totMonths) {
 			if (month != 0)
 				wulbach(month);
 			// 30 days to the month
+			
 			for (int day = 0; day < 30; day++) {
 				// first all the mosquito spawning
-				ArrayList<Female> Clone = new ArrayList(f);
-				for (Female F : Clone) {
+				HashMap<Female, Object> fClone = new HashMap(f);
+				for (Female F : fClone.keySet()) {
 					switch (F.produceChild()) {
 					case 0:
 						break;
 					case 1:
-						m.add(new Male(F.childType(), 0));
+						m.put(new Male(F.childType(), 0), null);
 						break;
 					case 2:
-						f.add(new Female(F.childType(), 0));
+						f.put(new Female(F.childType(), 0), null);
 					}
 				}
 				// mating again
-				for (Female F : f) {
+				for (Female F : f.keySet()) {
 					if (F.age == 15)
-						mateablef.add(F);
+						mateablef.put(F, null);
 				}
-				for (Male M : m) {
+				for (Male M : m.keySet()) {
 					if (M.age >= 15)
-						mateablem.add(M);
+						mateablem.put(M, null);
 				}
 				mate(mateablef, mateablem);
 				mateablef.clear();
 				mateablem.clear();
 				// now all our mosquitoes age, we weed out the dead
-				ArrayList<Female> fClone = new ArrayList(f);
-				ArrayList<Male> mClone = new ArrayList(m);
-
-				for (Female F : fClone) {
+				for(Female F : f.keySet()) {
+					if(!fClone.containsKey(F))
+						f.put(F, null);
+				}
+				
+				Iterator<Female> iter = f.keySet().iterator();
+				while (iter.hasNext()) {
+					Female F = iter.next();
 					F.update();
 					if (!F.alive)
-						f.remove(F);
-				}
-				for (Male M : mClone) {
+						iter.remove();
+				    }
+
+				Iterator<Male> iter1 = m.keySet().iterator();
+				while (iter1.hasNext()) {
+					Male M = iter1.next();
 					M.update();
 					if (!M.alive)
-						m.remove(M);
-				}
+						iter1.remove();
+				    }
+			
+				
 				// humans progressing on the path to recovery
-				for (Human H : h) {
+				for (Human H : h.keySet()) {
 					H.update();
 				}
 				// mosquitoes bite
@@ -118,13 +130,13 @@ public class Main {
 	 * Simulates mating of input female list with current adult males randomly
 	 * we assume in this simulation that a female only mates once
 	 */
-	static void mate(ArrayList<Female> f, ArrayList<Male> m) {
-		if (m.size() > 0) {
-			for (Female F : f) {
-				// generate random index of male to mate with
-				int random = (int) (Math.random() * m.size());
-				F.mate(m.get(random));
-			}
+	static void mate(HashMap<Female, Object> mateableF , HashMap<Male, Object> mateablem) {
+		for (Female F : mateableF.keySet()) {
+			// generate random index of male to mate with
+			
+			int index = (mateablem.size() == 0)? 0 : r.nextInt(mateablem.size());
+			List<Male> keys = new ArrayList<Male>(mateablem.keySet());
+			F.mate(keys.get(index));
 		}
 	}
 
@@ -140,9 +152,9 @@ public class Main {
 		for (int i = 0; i < pop; i++) {
 			boolean infected = i % infec == 0;
 			if (i % 30 == 0)	//0.033 is taken as % of humans pregnant
-				h.add(new Human(infected, true));
+				h.put(new Human(infected, true), null);
 			else
-				h.add(new Human(infected));
+				h.put(new Human(infected), null);
 		}
 
 		// initialising previously present mosquito population
@@ -153,15 +165,16 @@ public class Main {
 		wulbach(0);
 		System.out.println("Enter number of months the simulation should run:");
 		totMonths = sc.nextInt();
-		Random r=new Random(); 
 		for (int i = 0; i < fr; i++) {
+			int age = r.nextInt(41) + 15;
 			if (i % 50 == 0 && i % 100 != 0) // 1% population infected
-				f.add(new Female(1, r.nextInt(40)+15, true));
+				f.put(new Female(1, age, true) , null);
 			else
-				f.add(new Female(1, r.nextInt(40)+15 + 15));
+				f.put(new Female(1, age), null);
 		}
 		for (int i = 0; i < mr; i++) {
-			m.add(new Male(1, r.nextInt(10)+15 + 15));
+			int age = r.nextInt(41) + 15;
+			m.put(new Male(1, age), null);
 		}
 	}
 
@@ -188,14 +201,17 @@ public class Main {
 	 * @param f
 	 * @param m
 	 */
-	static void bite(ArrayList<Female> f, ArrayList<Human> h) {
+	static void bite(HashMap<Female, Object> f, HashMap<Human, Object> h) {
 		if (h.size() > 0) {
-			for (Female F : f) {
-				double r = Math.random(); // bite rate is 0.15
-				if (r < 0.15) {
+			for (Female F : f.keySet()) {
+				 // bite rate is 0.15
+				if (r.nextDouble() < 0.15) {
 					// generate random index of human to bite
-					int random = (int) (Math.random() * h.size());
-					handleBite(h.get(random), F);
+
+					int index = (h.size() == 0)? 0 : r.nextInt(h.size());
+					List<Human> keys = new ArrayList<Human>(h.keySet());
+				
+					handleBite(keys.get(index), F);
 				}
 			}
 		}
@@ -213,10 +229,10 @@ public class Main {
 		System.out.println("Enter wolbachian male population released in month " + j + ":");
 		mw = sc.nextInt();
 		for (int i = 0; i < fw; i++) {
-			f.add(new Female(0, 15));
+			f.put(new Female(0, 15), null);
 		}
 		for (int i = 0; i < mw; i++)
-			m.add(new Male(0, 15));
+			m.put(new Male(0, 15), null);
 	}
 
 	/**
@@ -227,16 +243,16 @@ public class Main {
 	 * @param m
 	 *            array of males
 	 */
-	static void print(ArrayList<Female> f, ArrayList<Male> m) {
+	static void print(HashMap<Female, Object> f, HashMap<Male, Object> m) {
 		int count = 0;
-		for (Female F : f) {
+		for (Female F : f.keySet()) {
 			if (F.getType() == 0)
 				count++;
 		}
 		System.out.println("Number of female Wulbachians: " + count);
 		System.out.println("Number of female Regular: " + (f.size() - count));
 		count = 0;
-		for (Male M : m) {
+		for (Male M : m.keySet()) {
 			if (M.getType() == 0)
 				count++;
 		}
@@ -245,7 +261,7 @@ public class Main {
 
 		count = 0;
 		int p = 0;
-		for (Human H : h) {
+		for (Human H : h.keySet()) {
 			if (H.infected) {
 				count++;
 				if (H.pregnant)
