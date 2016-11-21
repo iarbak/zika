@@ -1,0 +1,523 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     20576,        515]
+NotebookOptionsPosition[     20051,        493]
+NotebookOutlinePosition[     20400,        508]
+CellTagsIndexPosition[     20357,        505]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   StyleBox[
+    RowBox[{"Cornell", " ", "MCM", " ", "2016"}], "Title"], 
+   StyleBox["\[IndentingNewLine]", "Title"], 
+   StyleBox["\[IndentingNewLine]", "Title"], 
+   StyleBox[
+    RowBox[{
+     StyleBox["Mathematica",
+      FontSlant->"Italic"], 
+     StyleBox[" ",
+      FontSlant->"Italic"], "Implementation", " ", "and", " ", "Solution", 
+     " ", "to", " ", "System", " ", "of", " ", "Differential", " ", 
+     "Equation"}], "Subtitle"], 
+   StyleBox["\[IndentingNewLine]", "Title"], 
+   StyleBox["\[IndentingNewLine]", "Subtitle"], 
+   StyleBox[
+    RowBox[{
+     RowBox[{"Authors", ":", " ", 
+      RowBox[{"Aditi", " ", "Kabra", 
+       RowBox[{"(", "ank55", ")"}]}]}], ",", " ", 
+     RowBox[{"Divyansh", " ", "Garg", 
+      RowBox[{"(", "dg595", ")"}]}], ",", " ", 
+     RowBox[{"Dang", " ", "Pham", " ", 
+      RowBox[{"(", "dcp237", ")"}]}]}], "Subtitle"], 
+   StyleBox["\[IndentingNewLine]", "Subtitle"], 
+   StyleBox["\[IndentingNewLine]", "Subtitle"], 
+   StyleBox[
+    RowBox[{
+     RowBox[{
+      StyleBox["A", "Section",
+       FontWeight->"Plain"], 
+      StyleBox[
+       StyleBox[".", "Section",
+        FontWeight->"Plain"], "Section",
+       FontWeight->"Plain"], 
+      StyleBox[
+       StyleBox[" ", "Section",
+        FontWeight->"Plain"], "Section",
+       FontWeight->"Plain"], 
+      StyleBox[
+       RowBox[{
+        StyleBox[
+         StyleBox["C", "Section",
+          FontWeight->"Plain"], "Section",
+         FontWeight->"Plain"], "onstants"}]]}], " ", "Initialization"}], 
+    "Section",
+    FontWeight->"Plain"]}]}]], "Input",
+ CellChangeTimes->{{3.6887160243252773`*^9, 3.688716054108417*^9}, {
+  3.6887161475001817`*^9, 3.688716501297859*^9}, {3.688717154178567*^9, 
+  3.68871715799951*^9}, {3.688717195115629*^9, 3.688717204267037*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Invariant", " ", "constants", " ", "from", " ", "the", " ", "paper"}], 
+   " ", "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"\[Gamma]", " ", "=", " ", "0.1"}], ";", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Mosquitoes", " ", "Mortality", " ", "Rate"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"\[Alpha]", " ", "=", " ", 
+     RowBox[{"2", "*", "\[Gamma]"}]}], ";", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Mosquitoes", " ", "Birth", " ", "rate"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"H", " ", "=", " ", "3500000"}], ";", 
+    RowBox[{"(*", " ", 
+     RowBox[{"Population", " ", "of", " ", "Puerto", " ", "Rico"}], " ", 
+     "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"Nh0", " ", "=", " ", "25000"}], ";", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "The", " ", "initial", " ", "infected", " ", "human", " ", 
+      "population"}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"k", " ", "=", " ", "0.15"}], ";", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "The", " ", "initial", " ", "infected", " ", "human", " ", 
+      "population"}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"p1", " ", "=", " ", "1"}], ";", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "Tranmission", " ", "rate", " ", "from", " ", "humans", " ", "to", " ", 
+      "mosquitoes"}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"p2", " ", "=", " ", "0.15"}], ";"}], 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Tranmission", " ", "rate", " ", "from", " ", "mosquitoes", " ", "to", 
+     " ", "humans"}], " ", "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Set", " ", "up", " ", "for", " ", "the", " ", "model"}], " ", 
+    "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"F0", "=", "11375000"}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Initial", " ", "female", " ", "regular", " ", "mosquitoes"}], 
+    " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Mw0", " ", "=", " ", "0"}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Number", " ", "of", " ", "male", " ", 
+     StyleBox["Wolbachia",
+      FontSlant->"Italic"], " ", "released", " ", "per", " ", "month"}], " ", 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Fw0", " ", "=", " ", "25500"}], ";"}], 
+   RowBox[{"(*", " ", 
+    RowBox[{"Number", " ", "of", " ", "female", " ", 
+     StyleBox["Wolbachia",
+      FontSlant->"Italic"], " ", "released", " ", "per", " ", "month"}], " ", 
+    "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Initial", " ", "model", " ", "time"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"tmin", "=", "0"}], ";"}], " ", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Final", " ", "model", " ", "time"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"tmax", "=", "1825"}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.6887165625803394`*^9, 3.6887166099769087`*^9}, {
+  3.6887166411178885`*^9, 3.6887169385817933`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["B. Solving and Plotting System of Equations", \
+"Section"]], "Subsubsection",
+ CellChangeTimes->{{3.688716516364316*^9, 3.688716557419289*^9}, {
+  3.6887171340728865`*^9, 3.688717151214965*^9}, {3.6887172079799476`*^9, 
+  3.688717214702191*^9}, {3.688717321059331*^9, 3.6887173443556705`*^9}, {
+  3.6887175180360236`*^9, 3.6887175191600533`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Manipulate", "[", " ", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Set", " ", "up", " ", "system"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"sys", " ", "=", " ", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Fw", "'"}], "[", "t", "]"}], " ", "\[Equal]", " ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"\[Alpha]", " ", "/", "2"}], ")"}], " ", "*", " ", 
+           RowBox[{"Fw", "[", "t", "]"}]}], " ", "-", " ", 
+          RowBox[{"\[Gamma]", "*", 
+           RowBox[{"Fw", "[", "t", "]"}]}]}]}], ",", " ", 
+        RowBox[{
+         RowBox[{"Fw", "[", "0", "]"}], " ", "\[Equal]", "  ", "Fw0"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Mw", "'"}], "[", "t", "]"}], " ", "\[Equal]", "  ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"\[Alpha]", " ", "/", "2"}], ")"}], " ", "*", " ", 
+           RowBox[{"Fw", "[", "t", "]"}]}], " ", "-", " ", 
+          RowBox[{"\[Gamma]", "*", 
+           RowBox[{"Mw", "[", "t", "]"}]}]}]}], ",", " ", 
+        RowBox[{
+         RowBox[{"Mw", "[", "0", "]"}], " ", "\[Equal]", "  ", "Mw0"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Fr", "'"}], "[", "t", "]"}], "\[Equal]", " ", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"\[Alpha]", "*", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"Fr", "[", "t", "]"}], ")"}], "^", "2"}]}], ")"}], 
+            "/", 
+            RowBox[{"(", 
+             RowBox[{"2", "*", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"Fr", "[", "t", "]"}], "+", 
+                RowBox[{"Mw", "[", "t", "]"}]}], ")"}]}], ")"}]}], ")"}], " ",
+           "-", 
+          RowBox[{"(", 
+           RowBox[{"\[Gamma]", "*", 
+            RowBox[{"Fr", "[", "t", "]"}]}], ")"}]}]}], ",", 
+        RowBox[{
+         RowBox[{"Fr", "[", "0", "]"}], "\[Equal]", " ", "F0"}], ",", " ", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Nz", "'"}], "[", "t", "]"}], "\[Equal]", " ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"k", "*", "p1"}], ")"}], "*", 
+           RowBox[{"Nh", "[", "t", "]"}], "*", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"Fr", "[", "t", "]"}], ")"}], "-", 
+               RowBox[{"Nz", "[", "t", "]"}]}], ")"}], " ", "/", " ", "H"}], 
+            ")"}]}], " ", "-", " ", 
+          RowBox[{"\[Gamma]", "*", " ", 
+           RowBox[{"Nz", "[", "t", "]"}]}]}]}], ",", 
+        RowBox[{
+         RowBox[{"Nz", "[", "0", "]"}], "\[Equal]", 
+         RowBox[{"0.01", "*", "F0"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Nh", "'"}], "[", "t", "]"}], "\[Equal]", " ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"k", " ", "*", " ", "p2"}], ")"}], " ", "*", 
+           RowBox[{"Nz", "[", "t", "]"}], "*", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"H", "-", 
+               RowBox[{"Nh", "[", "t", "]"}]}], ")"}], "/", " ", "H"}], " ", 
+            ")"}]}], "-", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Nh", "[", "t", "]"}], "/", "14"}], ")"}]}]}], ",", " ", 
+        RowBox[{
+         RowBox[{"Nh", "[", "0", "]"}], " ", "\[Equal]", "Nh0"}], " ", ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Nt", "'"}], "[", " ", "t", "]"}], "\[Equal]", " ", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"22", "/", "600"}], ")"}], "/", "21.37"}], ")"}], "*", 
+          RowBox[{"(", 
+           RowBox[{"k", " ", "*", " ", "p2"}], ")"}], " ", "*", 
+          RowBox[{"Nz", "[", "t", "]"}], "*", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"H", "-", 
+              RowBox[{"Nh", "[", "t", "]"}]}], ")"}], "/", " ", "H"}], " ", 
+           ")"}]}]}], " ", ",", 
+        RowBox[{
+         RowBox[{"Nt", "[", "0", "]"}], "\[Equal]", " ", "0"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"WhenEvent", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Mod", "[", 
+            RowBox[{"t", " ", ",", " ", "30"}], "]"}], " ", "\[Equal]", " ", 
+           "0"}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Fw", "[", "t", "]"}], " ", "\[Rule]", "   ", 
+             RowBox[{
+              RowBox[{"Fw", "[", "t", "]"}], " ", "+", " ", "Fw0"}]}], ",", 
+            " ", 
+            RowBox[{
+             RowBox[{"Mw", "[", "t", "]"}], " ", "\[Rule]", "   ", 
+             RowBox[{
+              RowBox[{"Mw", "[", "t", "]"}], " ", "+", " ", "Mw0"}]}]}], 
+           "}"}]}], "]"}]}], "\[IndentingNewLine]", "}"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{"Solve", " ", "the", " ", "system"}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"sol3", " ", "=", " ", 
+      RowBox[{"NDSolve", "[", 
+       RowBox[{"sys", ",", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Nt", "[", "t", "]"}], ",", " ", 
+          RowBox[{"Mw", "[", "t", "]"}], ",", " ", 
+          RowBox[{"Fr", "[", "t", "]"}], ",", " ", 
+          RowBox[{"Nz", "[", "t", "]"}], ",", " ", 
+          RowBox[{"Nh", "[", "t", "]"}], ",", " ", 
+          RowBox[{"Nt", "[", "t", "]"}]}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"t", ",", " ", "tmin", ",", " ", "tmax"}], "}"}]}], "]"}]}], 
+     ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{"Plot", " ", "the", " ", "desired", " ", "function"}], " ", 
+       "-", " ", 
+       RowBox[{
+       "evaluate", " ", "to", " ", "whichever", " ", "wanted", " ", 
+        "function", " ", "to", " ", "plot"}]}], " ", "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"Plot", "[", 
+      RowBox[{
+       RowBox[{"Evaluate", "[", 
+        RowBox[{
+         RowBox[{"Nh", "[", "t", "]"}], "/.", "sol3"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "tmin", ",", "tmax"}], "}"}], ",", 
+       RowBox[{"PlotRange", "\[Rule]", "Full"}]}], "]"}]}], ",", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", "Functionalities", " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"tmin", ",", "tmin", ",", "\"\<Starting Time (days)\>\""}], 
+       "}"}], ",", "0", ",", "1825", ",", 
+      RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"tmax", ",", "tmax", ",", "\"\<Maximum Time (days)\>\""}], 
+       "}"}], ",", "1", ",", "1825", ",", 
+      RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"Mw0", ",", "Mw0", ",", "\"\<Male Wolbachian\>\""}], "}"}], 
+      ",", "0", ",", "100000", ",", 
+      RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"Fw0", ",", "Fw0", ",", "\"\<Female Wolbachian\>\""}], "}"}], 
+      ",", "0", ",", "100000", ",", 
+      RowBox[{"Appearance", "\[Rule]", "\"\<Labeled\>\""}]}], "}"}]}], 
+   "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Find", " ", "total", " ", "number", " ", "of", " ", "pregnant", " ", 
+    "women"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"totalPregnantWomen", " ", "=", " ", 
+  RowBox[{"Ceiling", "[", 
+   RowBox[{"Min", "[", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Nt", "[", "t", "]"}], "/.", "sol3"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"t", ",", " ", "tmax", ",", "tmax"}], "}"}]}], "]"}], "]"}], 
+   "]"}]}]}], "Input",
+ CellChangeTimes->{{3.6887166189571424`*^9, 3.6887166238407197`*^9}, {
+  3.688716963799552*^9, 3.6887171315703363`*^9}, {3.688717219721502*^9, 
+  3.6887172212762203`*^9}, {3.6887173602962675`*^9, 3.6887173909525027`*^9}, {
+  3.688717497919438*^9, 3.6887175075972576`*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`Fw0$$ = 25500, $CellContext`Mw0$$ = 
+    0, $CellContext`tmax$$ = 1825, $CellContext`tmin$$ = 0, Typeset`show$$ = 
+    True, Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`tmin$$], 0, "Starting Time (days)"}, 0, 1825}, {{
+       Hold[$CellContext`tmax$$], 1825, "Maximum Time (days)"}, 1, 1825}, {{
+       Hold[$CellContext`Mw0$$], 0, "Male Wolbachian"}, 0, 100000}, {{
+       Hold[$CellContext`Fw0$$], 25500, "Female Wolbachian"}, 0, 100000}}, 
+    Typeset`size$$ = {360., {101., 107.}}, Typeset`update$$ = 0, 
+    Typeset`initDone$$, Typeset`skipInitDone$$ = 
+    True, $CellContext`tmin$94670$$ = 0, $CellContext`tmax$94671$$ = 
+    0, $CellContext`Mw0$94672$$ = 0, $CellContext`Fw0$94673$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`Fw0$$ = 25500, $CellContext`Mw0$$ = 
+        0, $CellContext`tmax$$ = 1825, $CellContext`tmin$$ = 0}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`tmin$$, $CellContext`tmin$94670$$, 0], 
+        Hold[$CellContext`tmax$$, $CellContext`tmax$94671$$, 0], 
+        Hold[$CellContext`Mw0$$, $CellContext`Mw0$94672$$, 0], 
+        Hold[$CellContext`Fw0$$, $CellContext`Fw0$94673$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`sys = {
+         Derivative[
+           1][$CellContext`Fw][$CellContext`t] == ($CellContext`\[Alpha]/
+             2) $CellContext`Fw[$CellContext`t] - $CellContext`\[Gamma] \
+$CellContext`Fw[$CellContext`t], $CellContext`Fw[0] == $CellContext`Fw0$$, 
+          Derivative[
+           1][$CellContext`Mw][$CellContext`t] == ($CellContext`\[Alpha]/
+             
+             2) $CellContext`Fw[$CellContext`t] - $CellContext`\[Gamma] \
+$CellContext`Mw[$CellContext`t], $CellContext`Mw[0] == $CellContext`Mw0$$, 
+          Derivative[
+           1][$CellContext`Fr][$CellContext`t] == ($CellContext`\[Alpha] \
+$CellContext`Fr[$CellContext`t]^2)/(
+            2 ($CellContext`Fr[$CellContext`t] + \
+$CellContext`Mw[$CellContext`t])) - $CellContext`\[Gamma] \
+$CellContext`Fr[$CellContext`t], $CellContext`Fr[0] == $CellContext`F0, 
+          Derivative[
+           1][$CellContext`Nz][$CellContext`t] == ($CellContext`k \
+$CellContext`p1) $CellContext`Nh[$CellContext`t] \
+(($CellContext`Fr[$CellContext`t] - \
+$CellContext`Nz[$CellContext`t])/$CellContext`H) - $CellContext`\[Gamma] \
+$CellContext`Nz[$CellContext`t], $CellContext`Nz[0] == 0.01 $CellContext`F0, 
+          Derivative[
+           1][$CellContext`Nh][$CellContext`t] == ($CellContext`k \
+$CellContext`p2) $CellContext`Nz[$CellContext`t] (($CellContext`H - \
+$CellContext`Nh[$CellContext`t])/$CellContext`H) - \
+$CellContext`Nh[$CellContext`t]/14, $CellContext`Nh[0] == $CellContext`Nh0, 
+          Derivative[
+           1][$CellContext`Nt][$CellContext`t] == ((22/600)/
+            21.37) ($CellContext`k $CellContext`p2) \
+$CellContext`Nz[$CellContext`t] (($CellContext`H - \
+$CellContext`Nh[$CellContext`t])/$CellContext`H), $CellContext`Nt[0] == 0, 
+          WhenEvent[
+          Mod[$CellContext`t, 30] == 
+           0, {$CellContext`Fw[$CellContext`t] -> \
+$CellContext`Fw[$CellContext`t] + $CellContext`Fw0$$, \
+$CellContext`Mw[$CellContext`t] -> $CellContext`Mw[$CellContext`t] + \
+$CellContext`Mw0$$}]}; $CellContext`sol3 = NDSolve[$CellContext`sys, {
+           $CellContext`Nt[$CellContext`t], 
+           $CellContext`Mw[$CellContext`t], 
+           $CellContext`Fr[$CellContext`t], 
+           $CellContext`Nz[$CellContext`t], 
+           $CellContext`Nh[$CellContext`t], 
+           $CellContext`Nt[$CellContext`t]}, {$CellContext`t, \
+$CellContext`tmin$$, $CellContext`tmax$$}]; Plot[
+         Evaluate[
+          ReplaceAll[
+           $CellContext`Nh[$CellContext`t], $CellContext`sol3]], \
+{$CellContext`t, $CellContext`tmin$$, $CellContext`tmax$$}, PlotRange -> 
+         Full]), "Specifications" :> {{{$CellContext`tmin$$, 0, 
+          "Starting Time (days)"}, 0, 1825, Appearance -> 
+         "Labeled"}, {{$CellContext`tmax$$, 1825, "Maximum Time (days)"}, 1, 
+         1825, Appearance -> 
+         "Labeled"}, {{$CellContext`Mw0$$, 0, "Male Wolbachian"}, 0, 100000, 
+         Appearance -> 
+         "Labeled"}, {{$CellContext`Fw0$$, 25500, "Female Wolbachian"}, 0, 
+         100000, Appearance -> "Labeled"}}, "Options" :> {}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{411., {188., 195.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{
+  3.6887174185027533`*^9, {3.688717511980647*^9, 3.6887175204076304`*^9}}],
+
+Cell[BoxData["9901"], "Output",
+ CellChangeTimes->{
+  3.6887174185027533`*^9, {3.688717511980647*^9, 3.6887175205301876`*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1849, 1037},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 1836, 51, 214, "Input"],
+Cell[2397, 73, 3131, 75, 392, "Input"],
+Cell[CellGroupData[{
+Cell[5553, 152, 370, 5, 51, "Subsubsection"],
+Cell[CellGroupData[{
+Cell[5948, 161, 8644, 222, 506, "Input"],
+Cell[14595, 385, 5299, 100, 400, "Output"],
+Cell[19897, 487, 126, 2, 63, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
