@@ -1,6 +1,9 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.ArrayList;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
 
@@ -111,7 +114,7 @@ public class Main {
 	 * Simulates mating of input female list with current adult males randomly
 	 * we assume in this simulation that a female only mates once
 	 */
-	static void mate(List<Female> f, List<Male> m) {
+	static void mate(ArrayList<Female> f, ArrayList<Male> m) {
 		if (m.size() > 0) {
 			for (Female F : f) {
 				// generate random index of male to mate with
@@ -129,11 +132,10 @@ public class Main {
 		// initialising human population
 		System.out.println("Enter number of humans:");
 		pop = sc.nextInt();
-		int preg = (int) ((double) pop * 0.367);
 		int infec = (int) ((double) pop * 0.07);
 		for (int i = 0; i < pop; i++) {
 			boolean infected = i % infec == 0;
-			if (i % preg == 0)
+			if (i % 30 == 0)	//0.033 is taken as % of humans pregnant
 				h.add(new Human(infected, true));
 			else
 				h.add(new Human(infected));
@@ -177,7 +179,7 @@ public class Main {
 	 * @param f
 	 * @param m
 	 */
-	static void bite(List<Female> f, List<Human> h) {
+	static void bite(ArrayList<Female> f, ArrayList<Human> h) {
 		if (h.size() > 0) {
 			for (Female F : f) {
 				double r = Math.random(); // bite rate is 0.15
